@@ -2,7 +2,7 @@
 // ======================================================
 //  CLIENTES
 // ======================================================
-const char* ARCHIVO_CLIENTES = "clientes.dat";
+const char* ARCHIVO_CLIENTES = "clientes.bin";
 
 
 vector<Cliente> cargarClientes() {

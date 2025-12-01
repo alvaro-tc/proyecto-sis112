@@ -2,7 +2,7 @@
 // ======================================================
 //  PRODUCTOS
 // ======================================================
-const char* ARCHIVO_PRODUCTOS = "productos.dat";
+const char* ARCHIVO_PRODUCTOS = "productos.bin";
 
 vector<Producto> cargarProductos() {
     vector<Producto> v;

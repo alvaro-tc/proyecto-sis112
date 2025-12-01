@@ -2,8 +2,8 @@
 // ======================================================
 //  VENTAS
 // ======================================================
-const char* ARCHIVO_VENTAS = "ventas.dat";
-const char* ARCHIVO_DETALLES = "detalles.dat";
+const char* ARCHIVO_VENTAS = "ventas.bin";
+const char* ARCHIVO_DETALLES = "detalles.bin";
 
 
 int obtenerSiguienteIdVenta() {
