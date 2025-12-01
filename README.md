@@ -9,7 +9,13 @@ Características principales
 - Persistencia simple en archivos locales.  
 - Interfaz de consola.  
 
-Estructura sugerida del proyecto
-- Informe/                Documentación(PDF)  
-- src/                    Código fuente 
 
+
+Estructura del proyecto
+- Informe/                Documentación (PDF)  
+- src/                    Código fuente
+  - main.cpp              Archivo principal donde corre todo el programa
+  - modelos.h             Aquí están las estructuras (structs) de los datos
+  - libreria_productos.h  Lógica para manejar los productos (agregar, listar, etc.)
+  - libreria_clientes.h   Lógica para manejar los clientes
+  - libreria_ventas.h     Lógica para las ventas y sus detalles
