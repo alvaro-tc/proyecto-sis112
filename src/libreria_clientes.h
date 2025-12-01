@@ -1,12 +1,9 @@
 
 // ======================================================
-//  ARCHIVOS
+//  CLIENTES
 // ======================================================
 const char* ARCHIVO_CLIENTES = "clientes.dat";
 
-// ======================================================
-//  CRUD CLIENTE
-// ======================================================
 
 vector<Cliente> cargarClientes() {
     vector<Cliente> v;
@@ -31,11 +28,22 @@ void guardarClientes(const vector<Cliente>& v) {
 void agregarCliente() {
     vector<Cliente> v = cargarClientes();
     Cliente c;
-    if (v.empty()) c.id = 1;
-    else c.id = v.back().id + 1;
-
     cout << "\n--- AGREGAR CLIENTE ---\n";
-    cout << "ID asignado: " << c.id << endl;
+    
+    bool idExiste;
+    do {
+        idExiste = false;
+        cout << "Ingrese ID: ";
+        cin >> c.id;
+        
+        for (const auto& cli : v) {
+            if (cli.id == c.id) {
+                cout << "Error: El ID ya existe. Intente con otro.\n";
+                idExiste = true;
+                break;
+            }
+        }
+    } while (idExiste);
     cout << "CI: "; cin >> c.ci;
     cout << "Telefono: "; cin >> c.telefono;
     cout << "Nombre: ";

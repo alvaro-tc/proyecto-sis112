@@ -1,13 +1,10 @@
 
 // ======================================================
-//  ARCHIVOS
+//  VENTAS
 // ======================================================
 const char* ARCHIVO_VENTAS = "ventas.dat";
 const char* ARCHIVO_DETALLES = "detalles.dat";
 
-// ======================================================
-//  CRUD VENTAS
-// ======================================================
 
 int obtenerSiguienteIdVenta() {
     ifstream f(ARCHIVO_VENTAS, ios::binary);
@@ -30,17 +27,40 @@ void nuevaVenta() {
         return;
     }
 
-    VentaArchivo nuevaVenta;
-    nuevaVenta.id = obtenerSiguienteIdVenta();
-    
     cout << "\n--- NUEVA VENTA ---\n";
-    cout << "ID Venta: " << nuevaVenta.id << endl;
+    
+    VentaArchivo nuevaVenta;
+
+    vector<int> idsVentas;
+    ifstream f(ARCHIVO_VENTAS, ios::binary);
+    if (f) {
+        VentaArchivo v;
+        while (f.read((char*)&v, sizeof(VentaArchivo))) {
+            idsVentas.push_back(v.id);
+        }
+        f.close();
+    }
+
+    bool idExiste;
+    do {
+        idExiste = false;
+        cout << "Ingrese ID Venta: ";
+        cin >> nuevaVenta.id;
+        
+        for (int id : idsVentas) {
+            if (id == nuevaVenta.id) {
+                cout << "Error: El ID de venta ya existe. Intente con otro.\n";
+                idExiste = true;
+                break;
+            }
+        }
+    } while (idExiste);
     
     cout << "Fecha (DD/MM/AAAA): ";
     cin.ignore();
     cin.getline(nuevaVenta.fecha, 20);
 
-    // Seleccionar Cliente
+
     listarClientes();
     cout << "Ingrese ID del Cliente: ";
     cin >> nuevaVenta.clienteId;
@@ -57,7 +77,7 @@ void nuevaVenta() {
         return;
     }
 
-    // Agregar Productos
+
     vector<DetalleVentaArchivo> detalles;
     double totalVenta = 0;
     char continuar = 's';
@@ -111,19 +131,18 @@ void nuevaVenta() {
 
     nuevaVenta.total = totalVenta;
 
-    // Guardar Venta
+
     ofstream fVenta(ARCHIVO_VENTAS, ios::binary | ios::app);
     fVenta.write((char*)&nuevaVenta, sizeof(VentaArchivo));
     fVenta.close();
 
-    // Guardar Detalles
+
     ofstream fDetalle(ARCHIVO_DETALLES, ios::binary | ios::app);
     for (const auto& d : detalles) {
         fDetalle.write((char*)&d, sizeof(DetalleVentaArchivo));
     }
     fDetalle.close();
 
-    // Actualizar Stock Productos
     guardarProductos(productos);
 
     cout << "Venta registrada con exito. Total: " << totalVenta << endl;
@@ -136,7 +155,6 @@ void listarVentas() {
         return;
     }
 
-    // Cargar todos los detalles en memoria para buscar rapido (simple approach)
     vector<DetalleVentaArchivo> todosDetalles;
     ifstream fDetalle(ARCHIVO_DETALLES, ios::binary);
     if (fDetalle) {

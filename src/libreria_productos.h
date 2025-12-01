@@ -1,12 +1,8 @@
 
 // ======================================================
-//  ARCHIVOS
+//  PRODUCTOS
 // ======================================================
 const char* ARCHIVO_PRODUCTOS = "productos.dat";
-
-// ======================================================
-//  CRUD PRODUCTO
-// ======================================================
 
 vector<Producto> cargarProductos() {
     vector<Producto> v;
@@ -32,12 +28,22 @@ void agregarProducto() {
     vector<Producto> v = cargarProductos();
     Producto p;
     
-    // Auto-increment ID
-    if (v.empty()) p.id = 1;
-    else p.id = v.back().id + 1;
-
     cout << "\n--- AGREGAR PRODUCTO ---\n";
-    cout << "ID asignado: " << p.id << endl;
+    
+    bool idExiste;
+    do {
+        idExiste = false;
+        cout << "Ingrese ID: ";
+        cin >> p.id;
+        
+        for (const auto& prod : v) {
+            if (prod.id == p.id) {
+                cout << "Error: El ID ya existe. Intente con otro.\n";
+                idExiste = true;
+                break;
+            }
+        }
+    } while (idExiste);
     
     cout << "Nombre: ";
     cin.ignore();
