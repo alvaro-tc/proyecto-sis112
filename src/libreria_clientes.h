@@ -1,3 +1,5 @@
+#ifndef LIBRERIA_CLIENTES_H
+#define LIBRERIA_CLIENTES_H
 
 // ======================================================
 //  CLIENTES
@@ -33,8 +35,7 @@ void agregarCliente() {
     bool idExiste;
     do {
         idExiste = false;
-        cout << "Ingrese ID: ";
-        cin >> c.id;
+        c.id = leerEntero("Ingrese ID: ");
         
         for (const auto& cli : v) {
             if (cli.id == c.id) {
@@ -44,10 +45,10 @@ void agregarCliente() {
             }
         }
     } while (idExiste);
-    cout << "CI: "; cin >> c.ci;
-    cout << "Telefono: "; cin >> c.telefono;
+    c.ci = leerEntero("CI: ");
+    c.telefono = leerEntero("Telefono: ");
     cout << "Nombre: ";
-    cin.ignore();
+    // cin.ignore(); // No necesario si venimos de leerEntero
     cin.getline(c.nombre, 50);
 
     v.push_back(c);
@@ -78,18 +79,23 @@ void eliminarCliente() {
         cout << "No hay clientes para eliminar.\n";
         return;
     }
-    int id;
-    cout << "Ingrese ID del cliente a eliminar: ";
-    cin >> id;
-    
-    auto it = remove_if(v.begin(), v.end(), [id](const Cliente& c){ return c.id == id; });
-    if (it != v.end()) {
-        v.erase(it, v.end());
-        guardarClientes(v);
-        cout << "Cliente eliminado.\n";
-    } else {
-        cout << "Cliente no encontrado.\n";
+
+    int id = leerEntero("Ingrese ID del cliente a eliminar: ");
+    bool encontrado = false;
+    for (int i = 0; i < v.size(); i++) {
+        if (v[i].id == id) {
+            v.erase(v.begin() + i);
+            encontrado = true;
+            break;
+        }
     }
+
+    if (!encontrado) {
+        cout << "Cliente no encontrado.\n";
+        return;
+    }
+    guardarClientes(v);
+    cout << "Cliente eliminado correctamente.\n";
 }
 
 void editarCliente() {
@@ -98,18 +104,16 @@ void editarCliente() {
         cout << "No hay clientes para editar.\n";
         return;
     }
-    int id;
-    cout << "Ingrese ID del cliente a editar: ";
-    cin >> id;
+    int id = leerEntero("Ingrese ID del cliente a editar: ");
 
     bool encontrado = false;
     for (auto& c : v) {
         if (c.id == id) {
             cout << "Editando cliente: " << c.nombre << endl;
-            cout << "Nuevo CI: "; cin >> c.ci;
-            cout << "Nuevo Telefono: "; cin >> c.telefono;
+            c.ci = leerEntero("Nuevo CI: ");
+            c.telefono = leerEntero("Nuevo Telefono: ");
             cout << "Nuevo Nombre: ";
-            cin.ignore();
+            // cin.ignore(); // No necesario
             cin.getline(c.nombre, 50);
             encontrado = true;
             break;
@@ -125,9 +129,7 @@ void editarCliente() {
 
 void buscarCliente() {
     vector<Cliente> v = cargarClientes();
-    int id;
-    cout << "Ingrese ID a buscar: ";
-    cin >> id;
+    int id = leerEntero("Ingrese ID a buscar: ");
     bool found = false;
     for(const auto& c : v) {
         if(c.id == id) {
@@ -152,8 +154,9 @@ void menuClientes() {
         cout << "4. Editar Cliente\n";
         cout << "5. Buscar Cliente\n";
         cout << "0. Volver\n";
-        cout << "Opcion: ";
-        cin >> op;
+        
+        op = leerEntero("Opcion: ");
+
         switch(op) {
             case 1: agregarCliente(); pausa(); break;
             case 2: listarClientes(); pausa(); break;
@@ -163,3 +166,5 @@ void menuClientes() {
         }
     } while(op != 0);
 }
+
+#endif

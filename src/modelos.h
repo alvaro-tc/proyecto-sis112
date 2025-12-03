@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -55,3 +56,4 @@ struct Venta {
     vector<DetalleVenta> items;
     double total;
 };
+

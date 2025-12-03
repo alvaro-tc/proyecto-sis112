@@ -1,3 +1,5 @@
+#ifndef LIBRERIA_PRODUCTOS_H
+#define LIBRERIA_PRODUCTOS_H
 
 // ======================================================
 //  PRODUCTOS
@@ -33,8 +35,7 @@ void agregarProducto() {
     bool idExiste;
     do {
         idExiste = false;
-        cout << "Ingrese ID: ";
-        cin >> p.id;
+        p.id = leerEntero("Ingrese ID: ");
         
         for (const auto& prod : v) {
             if (prod.id == p.id) {
@@ -46,17 +47,15 @@ void agregarProducto() {
     } while (idExiste);
     
     cout << "Nombre: ";
-    cin.ignore();
+    //cin.ignore(); // leerEntero ya consume el newline si se usa antes, pero aqui venimos de leerEntero que usa getline
+    // Sin embargo, leerEntero lee toda la linea, asi que el buffer esta limpio.
     cin.getline(p.nombre, 50);
     
     cout << "Descripcion: ";
     cin.getline(p.descripcion, 100);
     
-    cout << "Precio: ";
-    cin >> p.precio;
-    
-    cout << "Stock: ";
-    cin >> p.stock;
+    p.precio = leerDouble("Precio: ");
+    p.stock = leerEntero("Stock: ");
 
     v.push_back(p);
     guardarProductos(v);
@@ -87,20 +86,27 @@ void eliminarProducto() {
         cout << "No hay productos para eliminar.\n";
         return;
     }
-    int id;
-    cout << "Ingrese ID del producto a eliminar: ";
-    cin >> id;
 
-    auto it = remove_if(v.begin(), v.end(), [id](const Producto& p){ return p.id == id; });
-    
-    if (it != v.end()) {
-        v.erase(it, v.end());
-        guardarProductos(v);
-        cout << "Producto eliminado.\n";
-    } else {
-        cout << "Producto no encontrado.\n";
+    int id = leerEntero("Ingrese ID del producto a eliminar: ");
+    bool encontrado = false;
+    for (int i = 0; i < v.size(); i++) {
+        if (v[i].id == id) {
+            v.erase(v.begin() + i);
+            encontrado = true;
+            break;
+        }
     }
+
+    if (!encontrado) {
+        cout << "Producto no encontrado.\n";
+        return;
+    }
+    guardarProductos(v);
+    cout << "Producto eliminado correctamente.\n";
 }
+
+
+
 
 void editarProducto() {
     vector<Producto> v = cargarProductos();
@@ -108,23 +114,19 @@ void editarProducto() {
         cout << "No hay productos para editar.\n";
         return;
     }
-    int id;
-    cout << "Ingrese ID del producto a editar: ";
-    cin >> id;
+    int id = leerEntero("Ingrese ID del producto a editar: ");
 
     bool encontrado = false;
     for (auto& p : v) {
         if (p.id == id) {
             cout << "Editando producto: " << p.nombre << endl;
             cout << "Nuevo nombre: ";
-            cin.ignore();
+            // cin.ignore(); // No necesario si venimos de leerEntero
             cin.getline(p.nombre, 50);
             cout << "Nueva descripcion: ";
             cin.getline(p.descripcion, 100);
-            cout << "Nuevo precio: ";
-            cin >> p.precio;
-            cout << "Nuevo stock: ";
-            cin >> p.stock;
+            p.precio = leerDouble("Nuevo precio: ");
+            p.stock = leerEntero("Nuevo stock: ");
             encontrado = true;
             break;
         }
@@ -140,9 +142,7 @@ void editarProducto() {
 
 void buscarProducto() {
      vector<Producto> v = cargarProductos();
-     int id;
-     cout << "Ingrese ID a buscar: ";
-     cin >> id;
+     int id = leerEntero("Ingrese ID a buscar: ");
      bool found = false;
      for(const auto& p : v) {
          if(p.id == id) {
@@ -168,8 +168,9 @@ void menuProductos() {
         cout << "4. Editar Producto\n";
         cout << "5. Buscar Producto\n";
         cout << "0. Volver\n";
-        cout << "Opcion: ";
-        cin >> op;
+        
+        op = leerEntero("Opcion: ");
+
         switch(op) {
             case 1: agregarProducto(); pausa(); break;
             case 2: listarProductos(); pausa(); break;
@@ -179,3 +180,5 @@ void menuProductos() {
         }
     } while(op != 0);
 }
+
+#endif
