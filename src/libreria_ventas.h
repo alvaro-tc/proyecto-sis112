@@ -365,16 +365,57 @@ void buscarVenta() {
     }
 }
 
+void listarVentasOrdenadas(bool ascendente) {
+    vector<VentaArchivo> ventas = cargarVentas();
+    if (ventas.empty()) {
+        cout << "No hay ventas registradas.\n";
+        return;
+    }
+
+    // Ordenar
+    if (ascendente) {
+        sort(ventas.begin(), ventas.end(), [](const VentaArchivo& a, const VentaArchivo& b) {
+            return a.id < b.id;
+        });
+    } else {
+        sort(ventas.begin(), ventas.end(), [](const VentaArchivo& a, const VentaArchivo& b) {
+            return a.id > b.id;
+        });
+    }
+
+    vector<DetalleVentaArchivo> todosDetalles = cargarDetalles();
+
+    cout << "\n--- HISTORIAL DE VENTAS (" << (ascendente ? "ASC" : "DESC") << ") ---\n";
+    for (const auto& v : ventas) {
+        cout << "ID Venta: " << v.id << " | Fecha: " << v.fecha 
+             << " | ID Cliente: " << v.clienteId 
+             << " | Total: " << v.total << endl;
+        
+        cout << "   Detalles:\n";
+        for (const auto& d : todosDetalles) {
+            if (d.ventaId == v.id) {
+                cout << "   - ProdID: " << d.productoId 
+                     << " | Cant: " << d.cantidad 
+                     << " | P.Unit: " << d.precioUnitario 
+                     << " | Subtotal: " << (d.cantidad * d.precioUnitario) << endl;
+            }
+        }
+        cout << string(40, '-') << endl;
+    }
+}
+
 void menuVentas() {
     int op;
     do {
         system("cls");
         cout << "\n===== GESTION DE VENTAS =====\n";
         cout << "1. Nueva Venta\n";
-        cout << "2. Listar Ventas\n";
+        cout << "2. Listar Ventas (Orden Natural)\n";
         cout << "3. Eliminar Venta\n";
         cout << "4. Editar Venta\n";
         cout << "5. Buscar Venta\n";
+        cout << "6. Listar Ventas (Ascendente)\n";
+        cout << "7. Listar Ventas (Descendente)\n";
         cout << "0. Volver\n";
         
         op = leerEntero("Opcion: ");
@@ -385,6 +426,8 @@ void menuVentas() {
             case 3: eliminarVenta(); pausa(); break;
             case 4: editarVenta(); pausa(); break;
             case 5: buscarVenta(); pausa(); break;
+            case 6: listarVentasOrdenadas(true); pausa(); break;
+            case 7: listarVentasOrdenadas(false); pausa(); break;
             case 0: break;
             default: cout << "Opcion invalida.\n"; pausa(); break;
         }

@@ -88,6 +88,21 @@ void eliminarProducto() {
     }
 
     int id = leerEntero("Ingrese ID del producto a eliminar: ");
+
+    // Verificacion de integridad: Verificar si el producto esta en alguna venta
+    ifstream fDetalles("detalles.bin", ios::binary);
+    if (fDetalles) {
+        DetalleVentaArchivo d;
+        while (fDetalles.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+            if (d.productoId == id) {
+                cout << "Error: No se puede eliminar el producto porque esta asociado a una venta.\n";
+                fDetalles.close();
+                return;
+            }
+        }
+        fDetalles.close();
+    }
+
     bool encontrado = false;
     for (int i = 0; i < v.size(); i++) {
         if (v[i].id == id) {

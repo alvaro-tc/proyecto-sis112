@@ -267,6 +267,45 @@ void reporteGananciaTotal() {
     cout << "Suma de todas las ventas: " << totalGanancia << endl;
 }
 
+// 8. Cantidad Total de Productos Vendidos
+void reporteCantidadTotalProductos() {
+    vector<DetalleVentaArchivo> detalles = cargarDetallesReporte();
+    if (detalles.empty()) {
+        cout << "No hay ventas registradas.\n";
+        return;
+    }
+
+    int totalProductos = 0;
+    for (const auto& d : detalles) {
+        totalProductos += d.cantidad;
+    }
+
+    cout << "\n--- CANTIDAD TOTAL DE PRODUCTOS VENDIDOS ---\n";
+    cout << "Total de items vendidos: " << totalProductos << endl;
+}
+
+// 9. Venta con Menor Total
+void reporteVentaMenorTotal() {
+    vector<VentaArchivo> ventas = cargarVentasReporte();
+    if (ventas.empty()) {
+        cout << "No hay ventas registradas.\n";
+        return;
+    }
+
+    VentaArchivo minVenta = ventas[0];
+    for (const auto& v : ventas) {
+        if (v.total < minVenta.total) {
+            minVenta = v;
+        }
+    }
+
+    cout << "\n--- VENTA CON MENOR TOTAL ---\n";
+    cout << "ID Venta: " << minVenta.id << endl;
+    cout << "Cliente: " << obtenerNombreCliente(minVenta.clienteId) << endl;
+    cout << "Monto Total: " << minVenta.total << endl;
+    cout << "Fecha: " << minVenta.fecha << endl;
+}
+
 void menuReportes() {
     int op;
     do {
@@ -279,6 +318,8 @@ void menuReportes() {
         cout << "5. Producto de mayor precio\n";
         cout << "6. Producto de menor precio\n";
         cout << "7. Ganancia Total\n";
+        cout << "8. Cantidad Total de Productos Vendidos\n";
+        cout << "9. Venta con Menor Total\n";
         cout << "0. Volver\n";
         
         op = leerEntero("Opcion: ");
@@ -291,6 +332,8 @@ void menuReportes() {
             case 5: reporteProductoMayorPrecio(); pausa(); break;
             case 6: reporteProductoMenorPrecio(); pausa(); break;
             case 7: reporteGananciaTotal(); pausa(); break;
+            case 8: reporteCantidadTotalProductos(); pausa(); break;
+            case 9: reporteVentaMenorTotal(); pausa(); break;
             case 0: break;
             default: cout << "Opcion invalida.\n"; pausa(); break;
         }

@@ -81,6 +81,21 @@ void eliminarCliente() {
     }
 
     int id = leerEntero("Ingrese ID del cliente a eliminar: ");
+
+    // Verificacion de integridad: Verificar si el cliente tiene ventas
+    ifstream fVentas("ventas.bin", ios::binary);
+    if (fVentas) {
+        VentaArchivo venta;
+        while (fVentas.read((char*)&venta, sizeof(VentaArchivo))) {
+            if (venta.clienteId == id) {
+                cout << "Error: No se puede eliminar el cliente porque tiene ventas registradas.\n";
+                fVentas.close();
+                return;
+            }
+        }
+        fVentas.close();
+    }
+
     bool encontrado = false;
     for (int i = 0; i < v.size(); i++) {
         if (v[i].id == id) {
