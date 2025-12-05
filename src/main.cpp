@@ -27,9 +27,9 @@ int main() {
 
     system("cls");
     cout << "======================================================\n";
-    cout << "         SISTEMA DE INVENTARIADO DE FARMACIAS         \n";
+    cout << "         SISTEMA DE ALMACENES DE FARMACIAS         \n";
     cout << "======================================================\n\n";
-    cout << "Este es un sistema de inventariado hecho en C++ para la\n";
+    cout << "Este es un sistema de almacences hecho en C++ para la\n";
     cout << "gestion de productos y ventas de una farmacia \n";
     //cout << "Alvaro Torrez Calle\n\n";
     pausa();
