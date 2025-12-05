@@ -28,20 +28,21 @@ struct Cliente {
 };
 
 
-struct VentaArchivo {
+struct Venta {
     int id;
     char fecha[20];
     int clienteId;
     double total;
 };
 
-struct DetalleVentaArchivo {
+struct DetalleVenta {
     int ventaId;
     int productoId;
     int cantidad;
     double precioUnitario;
 };
 
+/*
 
 struct DetalleVenta {
     int productoId;
@@ -57,3 +58,4 @@ struct Venta {
     double total;
 };
 
+*/

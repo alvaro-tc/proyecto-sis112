@@ -12,12 +12,12 @@ using namespace std;
 // Funciones auxiliares para cargar datos (similares a las de otras librerias pero aqui para lectura)
 // Nota: Idealmente deberian estar en un modulo compartido, pero las duplicare aqui por simplicidad y desacoplamiento rapido.
 
-vector<VentaArchivo> cargarVentasReporte() {
-    vector<VentaArchivo> ventas;
+vector<Venta> cargarVentasReporte() {
+    vector<Venta> ventas;
     ifstream f("ventas.bin", ios::binary);
     if (f) {
-        VentaArchivo v;
-        while (f.read((char*)&v, sizeof(VentaArchivo))) {
+        Venta v;
+        while (f.read((char*)&v, sizeof(Venta))) {
             ventas.push_back(v);
         }
         f.close();
@@ -25,12 +25,12 @@ vector<VentaArchivo> cargarVentasReporte() {
     return ventas;
 }
 
-vector<DetalleVentaArchivo> cargarDetallesReporte() {
-    vector<DetalleVentaArchivo> detalles;
+vector<DetalleVenta> cargarDetallesReporte() {
+    vector<DetalleVenta> detalles;
     ifstream f("detalles.bin", ios::binary);
     if (f) {
-        DetalleVentaArchivo d;
-        while (f.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+        DetalleVenta d;
+        while (f.read((char*)&d, sizeof(DetalleVenta))) {
             detalles.push_back(d);
         }
         f.close();
@@ -68,7 +68,7 @@ string obtenerNombreCliente(int id) {
 
 // 1. Producto mas vendido
 void reporteProductoMasVendido() {
-    vector<DetalleVentaArchivo> detalles = cargarDetallesReporte();
+    vector<DetalleVenta> detalles = cargarDetallesReporte();
     if (detalles.empty()) {
         cout << "No hay ventas registradas para generar este reporte.\n";
         return;
@@ -100,7 +100,7 @@ void reporteProductoMasVendido() {
 // O podria ser monto, pero el requerimiento dice "compro mas cosas", asumire cantidad de items o veces que compro.
 // "que persona compro mas cosas" -> puede ser cantidad de productos total.
 void reporteClienteMasCompras() {
-    vector<VentaArchivo> ventas = cargarVentasReporte();
+    vector<Venta> ventas = cargarVentasReporte();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
@@ -131,13 +131,13 @@ void reporteClienteMasCompras() {
 
 // 3. Venta mas grande (Monto total)
 void reporteVentaMasGrande() {
-    vector<VentaArchivo> ventas = cargarVentasReporte();
+    vector<Venta> ventas = cargarVentasReporte();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
     }
 
-    VentaArchivo maxVenta = ventas[0];
+    Venta maxVenta = ventas[0];
     for (const auto& v : ventas) {
         if (v.total > maxVenta.total) {
             maxVenta = v;
@@ -153,7 +153,7 @@ void reporteVentaMasGrande() {
 
 // 4. Venta con mas productos (Cantidad de items)
 void reporteVentaMasProductos() {
-    vector<DetalleVentaArchivo> detalles = cargarDetallesReporte();
+    vector<DetalleVenta> detalles = cargarDetallesReporte();
     if (detalles.empty()) {
         cout << "No hay detalles de ventas.\n";
         return;
@@ -252,7 +252,7 @@ void reporteProductoMenorPrecio() {
 
 // 7. Ganancia Total
 void reporteGananciaTotal() {
-    vector<VentaArchivo> ventas = cargarVentasReporte();
+    vector<Venta> ventas = cargarVentasReporte();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
@@ -269,7 +269,7 @@ void reporteGananciaTotal() {
 
 // 8. Cantidad Total de Productos Vendidos
 void reporteCantidadTotalProductos() {
-    vector<DetalleVentaArchivo> detalles = cargarDetallesReporte();
+    vector<DetalleVenta> detalles = cargarDetallesReporte();
     if (detalles.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
@@ -286,13 +286,13 @@ void reporteCantidadTotalProductos() {
 
 // 9. Venta con Menor Total
 void reporteVentaMenorTotal() {
-    vector<VentaArchivo> ventas = cargarVentasReporte();
+    vector<Venta> ventas = cargarVentasReporte();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
     }
 
-    VentaArchivo minVenta = ventas[0];
+    Venta minVenta = ventas[0];
     for (const auto& v : ventas) {
         if (v.total < minVenta.total) {
             minVenta = v;

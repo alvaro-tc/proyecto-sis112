@@ -5,7 +5,11 @@
 //  CLIENTES
 // ======================================================
 const char* ARCHIVO_CLIENTES = "clientes.bin";
+// Histograma de las cantidad de productos
+// Grafica de clientes (producto mas vendido) 
 
+// Histograma de producto mas vendido
+// Cambio de funciones 
 
 vector<Cliente> cargarClientes() {
     vector<Cliente> v;
@@ -48,7 +52,7 @@ void agregarCliente() {
     c.ci = leerEntero("CI: ");
     c.telefono = leerEntero("Telefono: ");
     cout << "Nombre: ";
-    // cin.ignore(); // No necesario si venimos de leerEntero
+    // cin.ignore(); 
     cin.getline(c.nombre, 50);
 
     v.push_back(c);
@@ -82,11 +86,11 @@ void eliminarCliente() {
 
     int id = leerEntero("Ingrese ID del cliente a eliminar: ");
 
-    // Verificacion de integridad: Verificar si el cliente tiene ventas
+
     ifstream fVentas("ventas.bin", ios::binary);
     if (fVentas) {
-        VentaArchivo venta;
-        while (fVentas.read((char*)&venta, sizeof(VentaArchivo))) {
+        Venta venta;
+        while (fVentas.read((char*)&venta, sizeof(Venta))) {
             if (venta.clienteId == id) {
                 cout << "Error: No se puede eliminar el cliente porque tiene ventas registradas.\n";
                 fVentas.close();
@@ -128,7 +132,7 @@ void editarCliente() {
             c.ci = leerEntero("Nuevo CI: ");
             c.telefono = leerEntero("Nuevo Telefono: ");
             cout << "Nuevo Nombre: ";
-            // cin.ignore(); // No necesario
+            // cin.ignore(); 
             cin.getline(c.nombre, 50);
             encontrado = true;
             break;

@@ -9,10 +9,10 @@
 #include "modelos.h"
 
 using namespace std;
-
+// agregar resporte de compras de cada cliente
 void pausa() {
     cout << "\nPresione Enter para continuar...";
-    // cin.ignore(); // Removed to fix double enter issue
+    // cin.ignore(); 
     cin.get();
 }
 
@@ -30,8 +30,8 @@ int main() {
     cout << "         SISTEMA DE INVENTARIADO DE FARMACIAS         \n";
     cout << "======================================================\n\n";
     cout << "Este es un sistema de inventariado hecho en C++ para la\n";
-    cout << "gestion de productos y ventas de una farmacia desarrollado por:\n";
-    cout << "Alvaro Torrez Calle\n\n";
+    cout << "gestion de productos y ventas de una farmacia \n";
+    //cout << "Alvaro Torrez Calle\n\n";
     pausa();
 
     do {

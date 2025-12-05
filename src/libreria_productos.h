@@ -92,8 +92,8 @@ void eliminarProducto() {
     // Verificacion de integridad: Verificar si el producto esta en alguna venta
     ifstream fDetalles("detalles.bin", ios::binary);
     if (fDetalles) {
-        DetalleVentaArchivo d;
-        while (fDetalles.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+        DetalleVenta d;
+        while (fDetalles.read((char*)&d, sizeof(DetalleVenta))) {
             if (d.productoId == id) {
                 cout << "Error: No se puede eliminar el producto porque esta asociado a una venta.\n";
                 fDetalles.close();

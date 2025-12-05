@@ -11,9 +11,9 @@ const char* ARCHIVO_DETALLES = "detalles.bin";
 int obtenerSiguienteIdVenta() {
     ifstream f(ARCHIVO_VENTAS, ios::binary);
     if (!f) return 1;
-    VentaArchivo v;
+    Venta v;
     int maxId = 0;
-    while (f.read((char*)&v, sizeof(VentaArchivo))) {
+    while (f.read((char*)&v, sizeof(Venta))) {
         if (v.id > maxId) maxId = v.id;
     }
     f.close();
@@ -31,13 +31,13 @@ void nuevaVenta() {
 
     cout << "\n--- NUEVA VENTA ---\n";
     
-    VentaArchivo nuevaVenta;
+    Venta nuevaVenta;
 
     vector<int> idsVentas;
     ifstream f(ARCHIVO_VENTAS, ios::binary);
     if (f) {
-        VentaArchivo v;
-        while (f.read((char*)&v, sizeof(VentaArchivo))) {
+        Venta v;
+        while (f.read((char*)&v, sizeof(Venta))) {
             idsVentas.push_back(v.id);
         }
         f.close();
@@ -76,7 +76,7 @@ void nuevaVenta() {
     }
 
 
-    vector<DetalleVentaArchivo> detalles;
+    vector<DetalleVenta> detalles;
     double totalVenta = 0;
     char continuar = 's';
 
@@ -99,7 +99,7 @@ void nuevaVenta() {
             if (cantidad > 0 && cantidad <= prodSeleccionado->stock) {
                 prodSeleccionado->stock -= cantidad; // Reducir stock en memoria
                 
-                DetalleVentaArchivo detalle;
+                DetalleVenta detalle;
                 detalle.ventaId = nuevaVenta.id;
                 detalle.productoId = prodId;
                 detalle.cantidad = cantidad;
@@ -129,13 +129,13 @@ void nuevaVenta() {
 
 
     ofstream fVenta(ARCHIVO_VENTAS, ios::binary | ios::app);
-    fVenta.write((char*)&nuevaVenta, sizeof(VentaArchivo));
+    fVenta.write((char*)&nuevaVenta, sizeof(Venta));
     fVenta.close();
 
 
     ofstream fDetalle(ARCHIVO_DETALLES, ios::binary | ios::app);
     for (const auto& d : detalles) {
-        fDetalle.write((char*)&d, sizeof(DetalleVentaArchivo));
+        fDetalle.write((char*)&d, sizeof(DetalleVenta));
     }
     fDetalle.close();
 
@@ -151,19 +151,19 @@ void listarVentas() {
         return;
     }
 
-    vector<DetalleVentaArchivo> todosDetalles;
+    vector<DetalleVenta> todosDetalles;
     ifstream fDetalle(ARCHIVO_DETALLES, ios::binary);
     if (fDetalle) {
-        DetalleVentaArchivo d;
-        while (fDetalle.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+        DetalleVenta d;
+        while (fDetalle.read((char*)&d, sizeof(DetalleVenta))) {
             todosDetalles.push_back(d);
         }
         fDetalle.close();
     }
 
-    VentaArchivo v;
+    Venta v;
     cout << "\n--- HISTORIAL DE VENTAS ---\n";
-    while (fVenta.read((char*)&v, sizeof(VentaArchivo))) {
+    while (fVenta.read((char*)&v, sizeof(Venta))) {
         cout << "ID Venta: " << v.id << " | Fecha: " << v.fecha 
              << " | ID Cliente: " << v.clienteId 
              << " | Total: " << v.total << endl;
@@ -182,48 +182,48 @@ void listarVentas() {
     fVenta.close();
 }
 
-vector<VentaArchivo> cargarVentas() {
-    vector<VentaArchivo> v;
+vector<Venta> cargarVentas() {
+    vector<Venta> v;
     ifstream f(ARCHIVO_VENTAS, ios::binary);
     if (!f) return v;
-    VentaArchivo venta;
-    while (f.read((char*)&venta, sizeof(VentaArchivo))) {
+    Venta venta;
+    while (f.read((char*)&venta, sizeof(Venta))) {
         v.push_back(venta);
     }
     f.close();
     return v;
 }
 
-void guardarVentas(const vector<VentaArchivo>& v) {
+void guardarVentas(const vector<Venta>& v) {
     ofstream f(ARCHIVO_VENTAS, ios::binary | ios::trunc);
     for (const auto& venta : v) {
-        f.write((char*)&venta, sizeof(VentaArchivo));
+        f.write((char*)&venta, sizeof(Venta));
     }
     f.close();
 }
 
-vector<DetalleVentaArchivo> cargarDetalles() {
-    vector<DetalleVentaArchivo> v;
+vector<DetalleVenta> cargarDetalles() {
+    vector<DetalleVenta> v;
     ifstream f(ARCHIVO_DETALLES, ios::binary);
     if (!f) return v;
-    DetalleVentaArchivo d;
-    while (f.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+    DetalleVenta d;
+    while (f.read((char*)&d, sizeof(DetalleVenta))) {
         v.push_back(d);
     }
     f.close();
     return v;
 }
 
-void guardarDetalles(const vector<DetalleVentaArchivo>& v) {
+void guardarDetalles(const vector<DetalleVenta>& v) {
     ofstream f(ARCHIVO_DETALLES, ios::binary | ios::trunc);
     for (const auto& d : v) {
-        f.write((char*)&d, sizeof(DetalleVentaArchivo));
+        f.write((char*)&d, sizeof(DetalleVenta));
     }
     f.close();
 }
 
 void eliminarVenta() {
-    vector<VentaArchivo> ventas = cargarVentas();
+    vector<Venta> ventas = cargarVentas();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
@@ -247,8 +247,8 @@ void eliminarVenta() {
     }
 
     // Restaurar Stock
-    vector<DetalleVentaArchivo> detalles = cargarDetalles();
-    vector<DetalleVentaArchivo> detallesConservar;
+    vector<DetalleVenta> detalles = cargarDetalles();
+    vector<DetalleVenta> detallesConservar;
     
     // Mapa para acumular stock a restaurar: ProductoID -> Cantidad
     map<int, int> stockRestaurar;
@@ -293,10 +293,10 @@ void editarVenta() {
         return;
     }
 
-    VentaArchivo v;
+    Venta v;
     bool encontrado = false;
 
-    while (f.read((char*)&v, sizeof(VentaArchivo))) {
+    while (f.read((char*)&v, sizeof(Venta))) {
         if (v.id == id) {
             encontrado = true;
             cout << "Datos actuales:\n";
@@ -310,9 +310,9 @@ void editarVenta() {
             listarClientes();
             v.clienteId = leerEntero("Nuevo ID Cliente: ");
 
-            long pos = (long)f.tellg() - sizeof(VentaArchivo);
+            long pos = (long)f.tellg() - sizeof(Venta);
             f.seekp(pos);
-            f.write((char*)&v, sizeof(VentaArchivo));
+            f.write((char*)&v, sizeof(Venta));
             break;
         }
     }
@@ -334,10 +334,10 @@ void buscarVenta() {
         return;
     }
 
-    VentaArchivo v;
+    Venta v;
     bool encontrado = false;
 
-    while (fVentas.read((char*)&v, sizeof(VentaArchivo))) {
+    while (fVentas.read((char*)&v, sizeof(Venta))) {
         if (v.id == id) {
             encontrado = true;
             cout << "\n--- DETALLES DE LA VENTA ---\n";
@@ -348,8 +348,8 @@ void buscarVenta() {
             cout << "Productos:\n";
             
             ifstream fDetalles("detalles.bin", ios::binary);
-            DetalleVentaArchivo d;
-            while (fDetalles.read((char*)&d, sizeof(DetalleVentaArchivo))) {
+            DetalleVenta d;
+            while (fDetalles.read((char*)&d, sizeof(DetalleVenta))) {
                 if (d.ventaId == id) {
                     cout << " - Producto ID: " << d.productoId << " | Cant: " << d.cantidad << " | Subtotal: " << d.precioUnitario * d.cantidad << endl;
                 }
@@ -366,7 +366,7 @@ void buscarVenta() {
 }
 
 void listarVentasOrdenadas(bool ascendente) {
-    vector<VentaArchivo> ventas = cargarVentas();
+    vector<Venta> ventas = cargarVentas();
     if (ventas.empty()) {
         cout << "No hay ventas registradas.\n";
         return;
@@ -374,16 +374,16 @@ void listarVentasOrdenadas(bool ascendente) {
 
     // Ordenar
     if (ascendente) {
-        sort(ventas.begin(), ventas.end(), [](const VentaArchivo& a, const VentaArchivo& b) {
+        sort(ventas.begin(), ventas.end(), [](const Venta& a, const Venta& b) {
             return a.id < b.id;
         });
     } else {
-        sort(ventas.begin(), ventas.end(), [](const VentaArchivo& a, const VentaArchivo& b) {
+        sort(ventas.begin(), ventas.end(), [](const Venta& a, const Venta& b) {
             return a.id > b.id;
         });
     }
 
-    vector<DetalleVentaArchivo> todosDetalles = cargarDetalles();
+    vector<DetalleVenta> todosDetalles = cargarDetalles();
 
     cout << "\n--- HISTORIAL DE VENTAS (" << (ascendente ? "ASC" : "DESC") << ") ---\n";
     for (const auto& v : ventas) {
