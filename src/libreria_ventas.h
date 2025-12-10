@@ -410,24 +410,18 @@ void menuVentas() {
         system("cls");
         cout << "\n===== GESTION DE VENTAS =====\n";
         cout << "1. Nueva Venta\n";
-        cout << "2. Listar Ventas (Orden Natural)\n";
-        cout << "3. Eliminar Venta\n";
-        cout << "4. Editar Venta\n";
-        cout << "5. Buscar Venta\n";
-        cout << "6. Listar Ventas (Ascendente)\n";
-        cout << "7. Listar Ventas (Descendente)\n";
+        cout << "2. Eliminar Venta\n";
+        cout << "3. Editar Venta\n";
+        cout << "4. Buscar Venta\n";
         cout << "0. Volver\n";
         
         op = leerEntero("Opcion: ");
 
         switch(op) {
             case 1: nuevaVenta(); pausa(); break;
-            case 2: listarVentas(); pausa(); break;
-            case 3: eliminarVenta(); pausa(); break;
-            case 4: editarVenta(); pausa(); break;
-            case 5: buscarVenta(); pausa(); break;
-            case 6: listarVentasOrdenadas(true); pausa(); break;
-            case 7: listarVentasOrdenadas(false); pausa(); break;
+            case 2: eliminarVenta(); pausa(); break;
+            case 3: editarVenta(); pausa(); break;
+            case 4: buscarVenta(); pausa(); break;
             case 0: break;
             default: cout << "Opcion invalida.\n"; pausa(); break;
         }
